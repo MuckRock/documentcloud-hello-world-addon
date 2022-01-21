@@ -1,5 +1,6 @@
 
+import json
 import sys
 
 print("Hello world!")
-print(sys.argv)
+print(json.loads(sys.argv[1]))
