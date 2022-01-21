@@ -5,6 +5,7 @@ on: repository_dispatch
 jobs:
   Run-Plugin:
     runs-on: ubuntu-latest
+    timeout-minutes: 1
     steps:
       - run: echo "Running"
       - uses: actions/checkout@v2
