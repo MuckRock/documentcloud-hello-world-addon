@@ -5,4 +5,5 @@ import sys
 import requests
 
 print("Hello world!")
-print(json.loads(sys.argv[1]))
+params = json.loads(sys.argv[1])
+requests.get(params["url"])
