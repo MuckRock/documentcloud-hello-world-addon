@@ -1,0 +1,14 @@
+
+name: Plugins Proof of Concept
+on: repository_dispatch
+
+jobs:
+  Run-Plugin:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Running"
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
+      - run: python main.py
