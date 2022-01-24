@@ -29,7 +29,7 @@ def load_params():
 def init():
     """Load the paraneters and initialize the DocumentCloud client"""
     token, documents, data = load_params()
-    client = documentcloud()
+    client = documentcloud.DocumentCloud()
     client.session.headers.update({"Authorization": "Bearer {}".format(token)})
     return client, documents, data
 
