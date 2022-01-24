@@ -34,14 +34,17 @@ def init():
     return client, documents, data
 
 
-def main():
+def main(client, documents, data):
     """The main plugin functionality goes here"""
-    client, documents, data = init()
+    # fetch your plugin specific data
     name = data.get("name", "world")
+
+    # add a hello note to the first page of each selected document
     for doc_id in documents:
         document = client.documents.get(doc_id)
         document.annotations.create(f"Hello {name}!", 0)
 
 
 if __name__ == "__main__":
-    main()
+    client, documents, data = init()
+    main(client, documents, data)
