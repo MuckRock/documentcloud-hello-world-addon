@@ -18,18 +18,22 @@ def load_params():
     params = json.loads(sys.argv[1])
     # token is a JWT to use to authenticate against the DocumentCloud API
     token = params["token"]
+    # base_uri is the URI to make API calls to - allows the plugin to function
+    # in non-production environments
+    base_uri = params.get("base_uri")
     # Documents is a list of document IDs which were selected to run with this
     # plugin activation
     documents = params["documents"]
     # data is any plugin specific data sent with this request
     data = params["data"]
-    return token, documents, data
+    return token, base_uri, documents, data
 
 
 def init():
     """Load the paraneters and initialize the DocumentCloud client"""
-    token, documents, data = load_params()
-    client = documentcloud.DocumentCloud()
+    token, base_uri, documents, data = load_params()
+    kwargs = {'base_uri': base_uri} if base_uri is not None else {}
+    client = documentcloud.DocumentCloud(**kwargs)
     client.session.headers.update({"Authorization": "Bearer {}".format(token)})
     return client, documents, data
 
