@@ -35,6 +35,7 @@ def init():
     kwargs = {'base_uri': base_uri} if base_uri is not None else {}
     client = documentcloud.DocumentCloud(**kwargs)
     client.session.headers.update({"Authorization": "Bearer {}".format(token)})
+    client.session.headers["User-Agent"] += " (DC AddOn)"
     return client, documents, params
 
 
