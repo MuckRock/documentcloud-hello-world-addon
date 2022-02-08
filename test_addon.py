@@ -34,7 +34,7 @@ def arguments():
         base_uri = "https://api.staging.documentcloud.org/api/"
         auth_uri = "https://squarelet-staging.herokuapp.com/api/"
     else:
-        base_uri = "https://api.wwww.documentcloud.org/api/"
+        base_uri = "https://api.www.documentcloud.org/api/"
         auth_uri = "https://accounts.muckrock.com/api/"
     return username, password, base_uri, auth_uri, args
 
