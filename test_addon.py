@@ -24,6 +24,7 @@ def arguments():
         "can also be passed in environment variable DC_PASSWORD",
     )
     parser.add_argument("--documents", type=int, nargs="+", help="Document IDs")
+    parser.add_argument("--query", help="Search query")
     parser.add_argument("--params", help="Parameter JSON")
     parser.add_argument("--staging", action="store_true", help="Use the staging site")
     args = parser.parse_args()
@@ -35,25 +36,29 @@ def arguments():
     else:
         base_uri = "https://api.wwww.documentcloud.org/api/"
         auth_uri = "https://accounts.muckrock.com/api/"
-    return username, password, args.documents, args.params, base_uri, auth_uri
+    return username, password, base_uri, auth_uri, args
 
 
 def test():
     """Run the Add On locally"""
-    username, password, documents, params, base_uri, auth_uri = arguments()
+    username, password, base_uri, auth_uri, args = arguments()
     client = documentcloud.DocumentCloud(
         username=username,
         password=password,
         base_uri=base_uri,
         auth_uri=auth_uri,
     )
+    user = client.users.get("me")
     access_token = client._get_tokens(client.username, client.password)[0]
     payload = json.dumps(
         {
             "token": access_token,
             "base_uri": client.base_uri,
-            "documents": documents,
-            "data": json.loads(params),
+            "documents": args.documents,
+            "query": args.query,
+            "user": user.id,
+            "organization": user.organization,
+            "data": json.loads(args.params),
         }
     )
 
