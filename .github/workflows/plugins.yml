@@ -1,13 +1,20 @@
 
 name: Plugins Proof of Concept
-on: repository_dispatch
+
+on:
+  repository_dispatch:
+    inputs:
+      id:
+        description: "run identifier"
+        required: false
 
 jobs:
   Run-Plugin:
     runs-on: ubuntu-latest
     timeout-minutes: 1
     steps:
-      - run: echo "Running"
+      - name: ${{ github.event.inputs.id }}
+        run: echo run identifier ${{ inputs.id }}
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
         with:
