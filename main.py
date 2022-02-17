@@ -39,6 +39,7 @@ class HelloWorld(AddOn):
             self.upload_file(file_)
 
         self.set_message("Hello World end!")
+        self.send_mail("Hello World!", "We finished!")
 
 
 if __name__ == "__main__":

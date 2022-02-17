@@ -50,15 +50,14 @@ class AddOn:
     def set_progress(self, progress):
         """Set the progress as a percentage between 0 and 100."""
         assert 0 <= progress <= 100
-        self.client.patch(f"plugin_runs/{self.id}/", json={"progress": progress})
+        return self.client.patch(f"plugin_runs/{self.id}/", json={"progress": progress})
 
     def set_message(self, message):
         """Set the progress message."""
-        self.client.patch(f"plugin_runs/{self.id}/", json={"message": message})
+        return self.client.patch(f"plugin_runs/{self.id}/", json={"message": message})
 
     def upload_file(self, file):
         """Uploads a file to the plugin run."""
-
         # go to the beginning of the file
         file.seek(0)
         file_name = os.path.basename(file.name)
@@ -68,5 +67,12 @@ class AddOn:
         presigned_url = resp.json()["presigned_url"]
         # use buffer as it should always be binary, which requests wants
         requests.put(presigned_url, data=file.buffer)
-        self.client.patch(f"plugin_runs/{self.id}/", json={"file_name": file_name})
+        return self.client.patch(
+            f"plugin_runs/{self.id}/", json={"file_name": file_name}
+        )
 
+    def send_mail(self, subject, content):
+        """Send yourself an email"""
+        return self.client.post(
+            "messages/", json={"subject": subject, "content": content}
+        )
