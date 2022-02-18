@@ -20,20 +20,25 @@ class AddOn:
         # set up the client
         kwargs = {"base_uri": base_uri} if base_uri is not None else {}
         self.client = documentcloud.DocumentCloud(**kwargs)
-        self.client.session.headers.update({"Authorization": "Bearer {}".format(token)})
+        # if no token is passed in, the Add-On will only have anonymous access
+        # to the API
+        if token is not None:
+            self.client.session.headers.update(
+                {"Authorization": "Bearer {}".format(token)}
+            )
         self.client.session.headers["User-Agent"] += " (DC AddOn)"
 
     def _load_params(self):
         """Load the parameters passed in to the GitHub Action."""
         params = json.loads(sys.argv[1])
         # token is a JWT to use to authenticate against the DocumentCloud API
-        token = params.pop("token")
+        token = params.pop("token", None)
         # base_uri is the URI to make API calls to - allows the plugin to function
         # in non-production environments
         base_uri = params.pop("base_uri", None)
 
         # a unique identifier for this run
-        self.id = params.pop("id")
+        self.id = params.pop("id", None)
         # Documents is a list of document IDs which were selected to run with this
         # plugin activation
         self.documents = params.pop("documents", None)
@@ -49,15 +54,21 @@ class AddOn:
 
     def set_progress(self, progress):
         """Set the progress as a percentage between 0 and 100."""
+        if not self.id:
+            return None
         assert 0 <= progress <= 100
         return self.client.patch(f"plugin_runs/{self.id}/", json={"progress": progress})
 
     def set_message(self, message):
         """Set the progress message."""
+        if not self.id:
+            return None
         return self.client.patch(f"plugin_runs/{self.id}/", json={"message": message})
 
     def upload_file(self, file):
         """Uploads a file to the plugin run."""
+        if not self.id:
+            return None
         # go to the beginning of the file
         file.seek(0)
         file_name = os.path.basename(file.name)
