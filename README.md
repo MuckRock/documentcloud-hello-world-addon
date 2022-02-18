@@ -7,32 +7,81 @@ functionality to DocumentCloud.
 
 ## Files
 
-### main.py
+### addon.py
 
-This is the main Add-On file.  It contains three functions, `load_params`,
-`init`, and `main`.  The first two are designed to not be modified.  They will
-load the parameters passed in to the GitHub action and pass them to the `main`
-function.  The `main` function is designed to be update on a per Add-On basis
-with custom functionality.  The `main` function will be passed `client`,
-`documents`, `query`, and `params`.
+This file contains a base class `AddOn`, which implements shared functionality
+for all DocumentCloud Add-Ons to use.  In most cases, you should not need to
+edit this file.  You will subclass this class in `main.py`.
+
+Upon initializing this class, it parses the JSON passed in as an argument, and populates a number of member variables.
 
 * `client` - A DocumentCloud client.  This is a python library
   (https://github.com/MuckRock/python-documentcloud) allowing easy access to
   the DocumentCloud API.  It will be configured with the access token passed
   in, which gives you access to the API as the user who activated the Add-On
-  for 5 minutes.
+  for 5 minutes. (NOTE: we may need a way to pass in a refresh token if Add-Ons
+  need to run for more than 5 minutes)
+
+* `id` - a UUID to identify this run.  This is used to update progress, status
+  and upload files for this particular run of the Add-On.  This will be `None`
+  if called from the `test_addon.py` script.
 
 * `documents` - A list of document IDs selected when the Add-On was activated
 
 * `query` - The search query which was active when the Add-On was activated
 
-* `params` - The rest of the parameters as a dictionary.  Add-On specific data
-  is in "data", whil ethe user and organization IDs can be found in "user" and
-  "organization".
+* `user_id` - The user ID of the user who activated this run of the Add-On.
 
-Add-On specific data can be defined when registering the Add-On with
-DocumentCloud.  It allows DocumentCloud to show an Add-On specific form for
-collecting data when the Add-On is activated.
+* `org_id` - The organization ID of the active organization of the user who
+  activated this run of the Add-On.
+
+* `data` - The Add-On specific data.
+
+There are also some methods which provide useful functionality for an Add-On.
+
+* `set_progress(self, progress)` - This takes a single integer argument between
+  0 and 100 which represents the percent of progress the Add-On run has made,
+  to inform the user of the progress.  As it takes some time to be shown to the
+  user, this is primarily of use for long running Add-Ons.
+
+* `set_message(self, message)` - Takes a string of max length 255 characters.
+  This sets a status message to let the user know what the status of the Add-On
+  run is. Similar to `set_progress`, it is mostly useful for long running
+  Add-Ons.
+
+* `upload_file(self, file)` - Takes a file object to attach to this Add-On run.
+  This will be presented to the user for download.  This is useful for Add-Ons
+  which want to return data such as a CSV file or other exports of data to the
+  user.  It is currently limited to one file per run, so please ZIP your files
+  if you need to return more than one.
+
+* `send_mail(self, subject, content)` - This is used to email yourself at the
+  email address associated with your DocumentCloud account.  This can be used
+  to send a notification when an Add-On run is complete or just to send
+  additional information to the user who ran the Add-On.  It takes two
+  character strings, one for the subject and one for the body content of the
+  email.  The content is plain text and does not currently support Markdown or
+  HTML.
+
+### main.py
+
+This is the file to edit to implement your Add-On specific functionality.  You
+should define a class which inherits from `AddOn` from `addon.py`.  Then you
+can instantiate a new instance and call the main method, which is the entry
+point for your Add-On logic.  You may access the data parsed by `AddOn` as well
+as using the helper methods defined there.  The `HelloWorld` example Add-On
+demonstrates using many of these features.
+
+If you need to add more files, remember to instantiate the main Add-On class
+from a file called `main.py` - that is what the GitHub action will call with
+the Add-On parameters upon being dispatched.
+
+### requirements.txt
+
+This is a standard `pip` `requirements.txt` file.  It allows you to specify
+python packages to be installed before running the Add-On.  You may add any
+dependencies your Add-On has here.  By default we install the
+`python-documentcloud` API library and the `requests` HTTP request package.
 
 ### test_addon.py
 
@@ -51,6 +100,18 @@ Example invocation:
 ```
 python test_addon.py --documents 123 --params '{"name": "World"}'
 ```
+
+### .github/workflows/plugin.yml
+
+This is the GitHub Actions configuration file.  We have a very simple workflow
+defined, which sets up python, installes dependencies and runs the `main.py` to
+start the Add-On.  It should not need to be edited in most cases, unless you
+have an advanced use case.  If you do edit it, you should leave the first step
+in place, which uses the UUID as its name, to allow DocumentCloud to identify
+the run.
+
+It would be possible to make a similar workflow for other programming languages
+if one wanted to write Add-Ons in a language besides python.
 
 ## Reference
 
@@ -82,5 +143,6 @@ for your `main` function to use.  The following are the top level keys in the ob
   activated the Add-On.  They are also passed in to `main` through the `params`
   dictionary under the keys `user` and `organization` respectively.
 
-* If more metadata is added in the future, it will automatically be passed in
-  through the `params` dictionary.
+* `id` - A UUID to uniquely identify this Add-On run.  It allows DocumentCloud
+  to identify the run, as well as allowing the run to send back progress,
+  status message and file updates.
