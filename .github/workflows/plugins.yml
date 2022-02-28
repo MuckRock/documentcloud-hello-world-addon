@@ -1,18 +1,6 @@
 
 name: Plugins Proof of Concept
-on: 
-  repository_dispatch:
-  workflow_dispatch:
-    # Inputs the workflow accepts. https://www.notion.so/muckrock/Plugin-Parameters-e74a30d6dbb64641927fde7d7087bcbd
-    # [{"name": "name", "type": "text", "label": "Name"}]
-    inputs:
-      simulate_user_parameters:
-        # Friendly description to be shown in the UI instead of 'name'
-        description: 'input data on behalf of the user'
-        # Default value if no value is explicitly provided
-        default: '[]'
-        # Input has to be provided for the workflow to run
-        required: true
+on: repository_dispatch
 
 jobs:
   Run-Plugin:
