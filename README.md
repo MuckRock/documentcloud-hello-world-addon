@@ -113,7 +113,7 @@ in place, which uses the UUID as its name, to allow DocumentCloud to identify
 the run.
 
 It would be possible to make a similar workflow for other programming languages
-if one wanted to write Add-Ons in a language besides python.
+if one wanted to write Add-Ons in a language besides Python.
 
 ## Reference
 
