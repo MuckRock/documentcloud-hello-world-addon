@@ -28,7 +28,7 @@ class HelloWorld(AddOn):
                 document = self.client.documents.get(doc_id)
                 document.annotations.create(f"Hello {name}!", 0)
         elif self.query:
-            documents = self.client.documents.search(self.query)
+            documents = self.client.documents.search(self.query)[:25]
             length = len(documents)
             for i, document in enumerate(documents):
                 self.set_progress(100 * i // length)
