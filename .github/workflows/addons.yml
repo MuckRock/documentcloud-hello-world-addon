@@ -1,5 +1,5 @@
 
-name: Add-On Proof of Concept
+name: Add-On
 on: repository_dispatch
 
 jobs:
