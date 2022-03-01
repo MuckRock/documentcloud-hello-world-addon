@@ -53,7 +53,8 @@ There are also some methods which provide useful functionality for an Add-On.
   This will be presented to the user for download.  This is useful for Add-Ons
   which want to return data such as a CSV file or other exports of data to the
   user.  It is currently limited to one file per run, so please ZIP your files
-  if you need to return more than one.
+  if you need to return more than one.  The file will be available for download
+  for five days, after which it will be permanently deleted from the server.
 
 * `send_mail(self, subject, content)` - This is used to email yourself at the
   email address associated with your DocumentCloud account.  This can be used
