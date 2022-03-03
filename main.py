@@ -7,7 +7,7 @@ from DocumentCloud via the request dispatch and writes data back to
 DocumentCloud using the standard API
 """
 
-from addon import AddOn
+from documentcloud.addon import AddOn
 
 
 class HelloWorld(AddOn):

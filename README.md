@@ -9,6 +9,8 @@ functionality to DocumentCloud.
 
 ### addon.py
 
+This file is part of the `python-documentcloud` library.
+
 This file contains a base class `AddOn`, which implements shared functionality
 for all DocumentCloud Add-Ons to use.  In most cases, you should not need to
 edit this file.  You will subclass this class in `main.py`.
