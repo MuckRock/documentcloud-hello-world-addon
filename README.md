@@ -2,7 +2,7 @@
 # DocumentCloud Add-On Example
 
 This repository contains an example Add-On for DocumentCloud.  It is designed
-to be forked and modified to allow one to easily write Add-Ons to bring custom
+to be copied and modified to allow one to easily write Add-Ons to bring custom
 functionality to DocumentCloud.
 
 ## Files
@@ -67,6 +67,21 @@ There are also some methods which provide useful functionality for an Add-On.
   email.  The content is plain text and does not currently support Markdown or
   HTML.
 
+The script also accepts command line options to allow for easier testing for
+development purposes. It requires your DocumentCloud username and password if
+the add-on requires authentication, which is used to fetch a refresh and access
+token.  They can be passed in as command line arguments (`--username` and
+`--password`), or in environment variables (`DC_USERNAME` and `DC_PASSWORD`).
+
+You can also pass in a list of document IDs (`--documents`), a search query
+(`--query`), and JSON parameters for your Add-On (`--data`) - be sure to
+properly quote your JSON at the command line.
+
+Example invocation:
+```
+python main.py --documents 123 --data '{"name": "World"}'
+```
+
 ### main.py
 
 This is the file to edit to implement your Add-On specific functionality.  You
@@ -86,29 +101,13 @@ This is a standard `pip` `requirements.txt` file.  It allows you to specify
 python packages to be installed before running the Add-On.  You may add any
 dependencies your Add-On has here.  By default we install the
 `python-documentcloud` API library and the `requests` HTTP request package.
-
-### test_addon.py
-
-This is a test runner script, which will allow you to easily pass data in the
-correct format into `main.py`, allowing you to run the Add-On locally, useful
-for development purposes.  It requires your DocumentCloud username and
-password, which is used to fetch an access token.  They can be passed in as
-command line arguments (`--username` and `--password`), or in environment
-variables (`DC_USERNAME` and `DC_PASSWORD`).
-
-You can also pass in a list of document IDs (`--documents`), a search query
-(`--query`), and JSON parameters for your Add-On (`--params`) - be sure to
-properly quote your JSON at the command line.
-
-Example invocation:
-```
-python test_addon.py --documents 123 --params '{"name": "World"}'
-```
+You may upgrade the `python-documentcloud` version when new releases come out
+in order to take advantage of new features.
 
 ### .github/workflows/addons.yml
 
 This is the GitHub Actions configuration file.  We have a very simple workflow
-defined, which sets up python, installes dependencies and runs the `main.py` to
+defined, which sets up python, installs dependencies and runs the `main.py` to
 start the Add-On.  It should not need to be edited in most cases, unless you
 have an advanced use case.  If you do edit it, you should leave the first step
 in place, which uses the UUID as its name, to allow DocumentCloud to identify
@@ -122,19 +121,24 @@ if one wanted to write Add-Ons in a language besides Python.
 ### Full parameter reference
 
 This is a reference of all of the data passed in to the Add-On.  A single JSON
-object is passed in to `main.py` as a quoted string.  The `init` and
-`load_params` functions parse this out and convert it to useful python objects
-for your `main` function to use.  The following are the top level keys in the
-object.
+object is passed in to `main.py` as a quoted string.  The `init` function
+parses this out and converts it to useful python objects for your `main`
+function to use.  The following are the top level keys in the object.
 
 * `token` - An access token which will be valid for 5 minutes, giving you API
   access authorized as the user who activated the add-on.  The `init` function
   uses this value to configure the DocumentCloud client object.
 
+* `refresh_token` - A refresh token which will be valid for 1 day, giving you
+  API access to new refresh tokens when they expire.  The `init` function uses
+  this value to configure the DocumentCloud client object.
+
 * `base_uri` - This can be used to point the API server to other instances,
   such as our internal staging server.  It should not be used unless you are
   running your own instance of DocumentCloud.  It is also used in the
   initialization of the DocumentCloud client.
+
+* `auth_uri` - The corresponding `auth_uri` if a `base_uri` is specified.
 
 *  `documents` - This is the list of Document IDs which is passed in to `main`
 

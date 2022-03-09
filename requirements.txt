@@ -1,2 +1,2 @@
-python-documentcloud==2.3.1
+python-documentcloud==2.4.0
 requests
