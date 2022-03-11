@@ -1,10 +1,11 @@
 
 name: Update config
-on: push
-  branches:
-    - main
-  paths:
-    - config.yaml
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - config.yaml
 
 jobs:
   Update-Config:
