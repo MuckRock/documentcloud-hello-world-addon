@@ -1,7 +1,7 @@
 # The title is the title of your Add-On
 title: Hello World
 # The description will be shown above the form when activating the Add-On
-description: This is just a simple test add-on
+description: This is an updated simple test add-on
 # Type should always be object
 type: object
 # Properties are the fields for your form
