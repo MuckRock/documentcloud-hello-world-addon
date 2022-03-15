@@ -4,4 +4,4 @@ on: repository_dispatch
 
 jobs:
   Run-Add-On:
-    uses: Muckrock/documentcloud-addon-workflows/.github/workflows/run-addon.yml@v1
+    uses: MuckRock/documentcloud-addon-workflows/.github/workflows/run-addon.yml@v1

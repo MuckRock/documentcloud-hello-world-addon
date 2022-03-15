@@ -95,6 +95,42 @@ If you need to add more files, remember to instantiate the main Add-On class
 from a file called `main.py` - that is what the GitHub action will call with
 the Add-On parameters upon being dispatched.
 
+### config.yaml
+
+This is a YAML file which defines the data your Add-On expects to receive.
+DocumentCloud will use it to show a corresponding form with the proper fields.
+It uses the [JSON Schema](https://json-schema.org/) format, but allows you to
+use YAML for convenience.  You may read more about JSON Schema, but here are
+the basics to get started:
+
+```yaml
+# The title is the title of your Add-On
+title: Hello World
+# The description will be shown above the form when activating the Add-On
+description: This is an updated simple test add-on
+# Type should always be object
+type: object
+# Properties are the fields for your form
+properties:
+  # the key is the name of the variable that will be returned to your code
+  name:
+    # the title is what will be shown as the form label
+    title: Name
+    # a string is text
+    type: string
+```
+
+At the top level you have the following properties:
+
+* `title` - The title for your Add-On
+* `description` - a description for your Add-On - will be displayed above the
+  form when someone runs the add-on
+* `type` - This should always be set to `object`
+* `properties` - This is an object describing the data fields your add-on accepts
+    * The name will be the name of the variable the data is returned in
+    * `title` - The label shown on the form for this field
+    * `type` - This may be `string`, `number` or `boolean`
+
 ### requirements.txt
 
 This is a standard `pip` `requirements.txt` file.  It allows you to specify
@@ -104,17 +140,48 @@ dependencies your Add-On has here.  By default we install the
 You may upgrade the `python-documentcloud` version when new releases come out
 in order to take advantage of new features.
 
-### .github/workflows/addons.yml
+### .github/workflows/run-addon.yml
 
-This is the GitHub Actions configuration file.  We have a very simple workflow
-defined, which sets up python, installs dependencies and runs the `main.py` to
-start the Add-On.  It should not need to be edited in most cases, unless you
-have an advanced use case.  If you do edit it, you should leave the first step
-in place, which uses the UUID as its name, to allow DocumentCloud to identify
-the run.
+This is the GitHub Actions configuration file for running the add-on.  It
+references a reusable workflow from the
+`MuckRock/documentcloud-addon-workflows` repository.  This workflow sets up
+python, installs dependencies and runs the `main.py` to start the Add-On. It
+accepts two inputs:
+* `timeout` - Number of minutes to time out.  The default is `5`.  You may
+  increase this if your add-on will run for longer than that.
+* `python-version` - The version of python you would like to use.  Defaults to `3.10`.
+
+To set an input:
+```yaml
+jobs:
+  Run-Add-On:
+    uses: MuckRock/documentcloud-addon-workflows/.github/workflows/update-config.yml@v1
+    with:
+      timeout: 30
+```
+
+It is recommended you use the reusable workflow in order to receive future
+improvements to the workflow.  If needed you may fork the reusable workflow and
+edit it as needed. If you do edit it, you should leave the first step in place,
+which uses the UUID as its name, to allow DocumentCloud to identify the run.
 
 It would be possible to make a similar workflow for other programming languages
 if one wanted to write Add-Ons in a language besides Python.
+
+### .github/workflows/update-config.yml
+
+This is the GitHub Actions configuration file for updating the configuration
+file.  It references a reusable workflow from the
+`MuckRock/documentcloud-addon-workflows` repository.  This workflow sends a
+`POST` request to DocumentCloud whenever a new `config.yaml` file is pushed to
+the repository.  It accepts one input:
+* `url` - The base URL for the DocumentCloud API.  The default is
+  "https://api.www.documentcloud.org/api/".  It should only be changed if you
+  are running your own instance of DocumentCloud.
+
+### LICENSE
+
+The license this code is provided under, the 3-Clause BSD License
 
 ## Reference
 
