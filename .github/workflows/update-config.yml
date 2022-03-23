@@ -10,5 +10,3 @@ on:
 jobs:
   Update-Config:
     uses: MuckRock/documentcloud-addon-workflows/.github/workflows/update-config.yml@v1
-    with:
-      url: "https://api.staging.documentcloud.org/api/"
