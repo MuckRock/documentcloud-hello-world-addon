@@ -4,6 +4,13 @@ title: Hello World
 description: This is an updated simple test add-on
 # Type should always be object
 type: object
+# How does this add-on accept documents
+# If more than one type is specified, the user will be prompted to choose one
+documents:
+  # By the current search query
+  - query
+  # By the currently selected documents
+  - selected
 # Properties are the fields for your form
 properties:
   # the key is the name of the variable that will be returned to your code
