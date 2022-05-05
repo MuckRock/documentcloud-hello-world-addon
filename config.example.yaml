@@ -1,0 +1,80 @@
+# The config,yaml format is a JSON Schema document in YAML format
+# https://yaml.org/
+#
+# Learn more about JSON Schema:
+# https://json-schema.org/
+#
+# This example configuration shows the options supported by the
+# DocumentCloud add-on system
+
+# The title is the title of your Add-On
+title: Hello World
+# The description will be shown above the form when activating the Add-On
+description: This is an updated simple test add-on
+# Top level type should always be object
+type: object
+# How does this add-on accept documents
+# If more than one type is specified, the user will be prompted to choose one
+# This is a not a JSON Schema property
+documents:
+  # By the current search query
+  - query
+  # By the currently selected documents
+  - selected
+# Properties are the fields for your form
+properties:
+  # the key is the name of the variable that will be returned to your code
+  name:
+    # the title is what will be shown as the form label
+    title: Name
+    # a string is text - it will use a text input type
+    type: string
+    # description will be shown under the form field
+    # the top level description accepts markdown syntax and will be converted to HTML
+    description: Please enter your full name
+  url:
+    title: URL
+    type: string
+    # format will validate the string is of the given format
+    # All accepted formats:
+    # https://json-schema.org/understanding-json-schema/reference/string.html#built-in-formats
+    # Common formats:
+    # date-time, time, date, email, uri, uuid, regex
+    # date, time and date-time will create input boxes of the corresponding type
+    format: uri
+    # default will pre-populate the form field with this value
+    # it will also use this value if the add-on is dispatched with no value
+    # for this property
+    default: https://www.example.com
+  age:
+    title: Age
+    # a number is an integer or floating point number
+    # an integer is only integers 
+    # these will use a number input type
+    type: integer
+  vip:
+    title: VIP
+    # a boolean is either true or false - it will use a checkbox for the form
+    type: boolean
+  keywords:
+    # an array is an ordered collection of elements
+    # the form will present buttons to allow the input of an arbitrary number
+    # of array items
+    type: array
+    # items specifies the options of the individual items in the array
+    # you may use the same options as for top level properties
+    # items of this array must be strings
+    items:
+      type: string
+    description: Keywords to search and notify on
+    default:
+      - court
+      - foia
+
+# which properties are required to run this add-on - will be checked by them form
+required:
+  - name
+  - age
+
+
+

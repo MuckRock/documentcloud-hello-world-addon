@@ -2,7 +2,7 @@
 title: Hello World
 # The description will be shown above the form when activating the Add-On
 description: This is an updated simple test add-on
-# Type should always be object
+# Top level type should always be object
 type: object
 # How does this add-on accept documents
 # If more than one type is specified, the user will be prompted to choose one
