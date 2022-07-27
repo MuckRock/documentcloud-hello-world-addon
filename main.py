@@ -21,13 +21,10 @@ class HelloWorld(AddOn):
         self.set_message("Hello World start!")
 
         # add a hello note to the first page of each selected document
-        if self.documents:
-            for document in self.client.documents.list(id__in=self.documents):
-                document.annotations.create(f"Hello {name}!", 0)
-        elif self.query:
-            documents = self.client.documents.search(self.query)[:3]
-            for document in documents:
-                document.annotations.create(f"Hello {name}!", 0)
+        for document in self.get_documents():
+            # get_documents will iterate through all documents efficiently,
+            # either selected or by query, dependeing on which is passed in
+            document.annotations.create(f"Hello {name}!", 0)
 
         with open("hello.txt", "w+") as file_:
             file_.write("Hello world!")
