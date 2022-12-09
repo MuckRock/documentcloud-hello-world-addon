@@ -76,5 +76,19 @@ required:
   - name
   - age
 
-
+# Event options lets you configure add-ons to be run automatically on certain events
+# These can be at regularly scheduled intervals, or on every document upload
+eventOptions:
+  # The name defines which one of your properties is shown for scheduled events
+  # It should be a field which can identify the scheduled run
+  name: url
+  # events is a list of which event options the user may select from when scheduling
+  # Add-On runs
+  events:
+    # once an hour, day or week
+    - hourly
+    - daily
+    - weekly
+    # or run the Add-On for every new file uploaded
+    - upload
 
