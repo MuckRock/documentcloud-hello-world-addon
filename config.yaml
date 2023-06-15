@@ -19,3 +19,8 @@ properties:
     title: Name
     # a string is text
     type: string
+# Categories are what type of Add-On this is. Used to sort the Add-On in the Add-On menu. 
+categories: 
+  - file
+# Acceptable categories are premium, ai, export, bulk, file,  monitor, statistical, and extraction. 
+# You can read more about DocumentCloud Add-On categories here: https://www.documentcloud.org/help/add-ons#types-of-add-ons
