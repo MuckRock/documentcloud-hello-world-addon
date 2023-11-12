@@ -2,6 +2,8 @@
 title: Hello World
 # The description will be shown above the form when activating the Add-On
 description: This is an updated simple test add-on
+# Optional instructions field to describe how to use the Add-On
+instructions: This is a sample instruction.
 # Top level type should always be object
 type: object
 # How does this add-on accept documents
