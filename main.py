@@ -15,6 +15,9 @@ class HelloWorld(AddOn):
 
     def main(self):
         """The main add-on functionality goes here."""
+        # Add a custom user agent here to positively identify yourself 
+        self.client.session.headers.update({'User-Agent': 'Hello World Add-On'})
+
         # fetch your add-on specific data
         name = self.data.get("name", "world")
 
